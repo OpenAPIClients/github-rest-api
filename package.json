@@ -1,0 +1,28 @@
+{
+  "name": "github-rest-api",
+  "version": "0.0.1",
+  "description": "GitHub REST API documentation",
+  "scripts": {
+    "generate:html": "redoc-cli bundle -o build/pages/index.html openapi.yml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/OpenAPIClients/github-rest-api.git"
+  },
+  "keywords": [
+    "github",
+    "api",
+    "client",
+    "sdk",
+    "swagger"
+  ],
+  "author": "Yikun Chen <yikunc90@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OpenAPIClients/github-rest-api/issues"
+  },
+  "homepage": "https://github.com/OpenAPIClients/github-rest-api#readme",
+  "devDependencies": {
+    "redoc-cli": "^0.13.21"
+  }
+}
