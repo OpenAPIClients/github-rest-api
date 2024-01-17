@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "GitHub REST API documentation",
   "scripts": {
-    "generate:html": "redoc-cli bundle -o build/pages/index.html openapi.yml"
+    "generate:html": "redoc-cli bundle -o build/pages/index.html openapi.yml",
+    "generate:sdk:typescript-axios": "rm -rf build/generated/typescript-axios && openapi-generator generate -i openapi.yml -g typescript-axios -o build/generated/typescript-axios --git-repo-id=github-rest-api --git-user-id=OpenAPIClients --config configurations/typescript-axios.json"
   },
   "repository": {
     "type": "git",
@@ -11,8 +12,7 @@
   },
   "keywords": [
     "github",
-    "api",
-    "client",
+    "api client",
     "sdk",
     "swagger"
   ],
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/OpenAPIClients/github-rest-api#readme",
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.7.0",
     "redoc-cli": "^0.13.21"
   }
 }
