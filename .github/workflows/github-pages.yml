@@ -2,12 +2,8 @@
 name: Deploy static content to Pages
 
 on:
-  release:
-    types:
-      - published
-  # Runs on pushes targeting the default branch
-#  push:
-#    branches: ["main"]
+  push:
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
 #  workflow_dispatch:
@@ -25,7 +21,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changes: ${{ steps.changes.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            changes:
+              - openapi.yml
+              - package.json
   install-dependencies:
+    needs: changes
+    if: ${{ needs.changes.outputs.changes == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,6 +53,8 @@ jobs:
   deploy:
     needs:
       - install-dependencies
+      - changes
+    if: ${{ needs.changes.outputs.changes == 'true' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
