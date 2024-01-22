@@ -1,80 +1,80 @@
-name: Deploy static content to Pages
-
-on:
-  release:
-    types:
-      - published
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  install-dependencies:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - uses: actions/cache@v2
-        id: npm-cache
-        with:
-          path: node_modules
-          key: github-rest-api-dependencies-${{ hashFiles('package.json') }}
-      - name: Install dependencies
-        run: npm i && npx openapi-generator-cli help
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-
-  # Single deploy job since we're just deploying
-  deploy:
-    permissions: write-all
-    needs:
-      - install-dependencies
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      - uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: github-rest-api-dependencies-${{ hashFiles('package.json') }}
-      - run: npm run generate:html
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload entire repository
-          path: build/pages
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-#  generate-sdk-for-typescript-axios:
-#    needs:
-#      - install-dependencies
+#name: Deploy static content to Pages
+#
+#on:
+#  release:
+#    types:
+#      - published
+#
+## Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+## However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+#concurrency:
+#  group: "pages"
+#  cancel-in-progress: false
+#
+#jobs:
+#  install-dependencies:
 #    runs-on: ubuntu-latest
 #    steps:
 #      - name: Checkout
 #        uses: actions/checkout@v4
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: '20.x'
-#          registry-url: 'https://npm.pkg.github.com'
 #      - uses: actions/cache@v2
-#        id: yarn-cache
+#        id: npm-cache
 #        with:
 #          path: node_modules
 #          key: github-rest-api-dependencies-${{ hashFiles('package.json') }}
-#      - name: Generate Typescript Axios SDK
-#        run: npx openapi-generator-cli generate -i openapi.yml -g typescript-axios -o build/generated/typescript-axios --git-repo-id=github-rest-api --git-user-id=OpenAPIClients --config configurations/typescript-axios.json
-#      - name: Run install and publish
-#        run: |
-#          cd build/generated/typescript-axios
-#          npm i
-#          npm publish
-#        env:
-#          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Install dependencies
+#        run: npm i && npx openapi-generator-cli help
+#        if: steps.npm-cache.outputs.cache-hit != 'true'
+#
+#  # Single deploy job since we're just deploying
+#  deploy:
+#    permissions: write-all
+#    needs:
+#      - install-dependencies
+#    environment:
+#      name: github-pages
+#      url: ${{ steps.deployment.outputs.page_url }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#      - name: Setup Pages
+#        uses: actions/configure-pages@v4
+#      - uses: actions/cache@v2
+#        with:
+#          path: node_modules
+#          key: github-rest-api-dependencies-${{ hashFiles('package.json') }}
+#      - run: npm run generate:html
+#      - name: Upload artifact
+#        uses: actions/upload-pages-artifact@v3
+#        with:
+#          # Upload entire repository
+#          path: build/pages
+#      - name: Deploy to GitHub Pages
+#        id: deployment
+#        uses: actions/deploy-pages@v4
+##  generate-sdk-for-typescript-axios:
+##    needs:
+##      - install-dependencies
+##    runs-on: ubuntu-latest
+##    steps:
+##      - name: Checkout
+##        uses: actions/checkout@v4
+##      - uses: actions/setup-node@v3
+##        with:
+##          node-version: '20.x'
+##          registry-url: 'https://npm.pkg.github.com'
+##      - uses: actions/cache@v2
+##        id: yarn-cache
+##        with:
+##          path: node_modules
+##          key: github-rest-api-dependencies-${{ hashFiles('package.json') }}
+##      - name: Generate Typescript Axios SDK
+##        run: npx openapi-generator-cli generate -i openapi.yml -g typescript-axios -o build/generated/typescript-axios --git-repo-id=github-rest-api --git-user-id=OpenAPIClients --config configurations/typescript-axios.json
+##      - name: Run install and publish
+##        run: |
+##          cd build/generated/typescript-axios
+##          npm i
+##          npm publish
+##        env:
+##          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
