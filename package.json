@@ -1,6 +1,6 @@
 {
   "name": "github-rest-api",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "GitHub REST API documentation",
   "scripts": {
     "generate:html": "redoc-cli bundle -o build/pages/index.html openapi.yml",
